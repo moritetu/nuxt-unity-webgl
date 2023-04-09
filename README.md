@@ -126,14 +126,14 @@ mergeInto(LibraryManager.library, {
 
 ## Composables
 
-### `useProvideUnity(initialValue, callback)`
+### `useProvideNuxtUnity(initialValue, callback)`
 
 Injects unity store.
 
 ```typescript
 // initialValue: unity instance
 // callback    : (unityInstance) => void
-useProvideUnity(undefined, (unity) => {
+useProvideNuxtUnity(undefined, (unity) => {
   console.log(unity) // The unity instance
 })
 ```
@@ -150,9 +150,6 @@ Return the store, it is nullable. We uses `createInjectionState` of `VueUse`, so
 - `quit` - Function to quit unity
 - `error` - Error if unity loading fails
 - `SendMessage` - Utility function to send the unity game object
-- `nuxtUnityEvent` - EventEmitter for unity-nuxt
-  - `nuxt-unity:ready` - Hook called when unity instance created
-  - `nuxt-unity:quit` - Hook called when unity instance quitted
 
 ### `useNuxtUnityOrThrow()`
 
@@ -230,6 +227,20 @@ Delay millseconds time to resize canvas after window resized.
 ```
 
 Callback function called on `onBeforeUnmount` lifecycle hook.
+
+## Plugin
+
+You can use `$nuxtUnityEvent` plugin in your components or unity `.jslib` scripts.
+
+```typescript
+const { $nuxtUnityEvent } = useNuxtApp()
+$nuxtUnityEvent.on('message', () => console.log('message event fired'))
+$nuxtUnityEvent.emit('message')
+```
+
+- `$nuxtUnityEvent` - EventEmitter object
+  - `nuxt-unity:ready` - Hook called when unity instance created
+  - `nuxt-unity:quit` - Hook called when unity instance quitted
 
 ## Development
 
