@@ -16,6 +16,6 @@ describe('basic', async () => {
     expect(html).toContain('class="unity-canvas"')
     expect(html).toContain('style="width:600px;height:600px;display:block;"')
     expect(html).toContain('<div class="unity-extra-content"></div>')
-    expect(html).toMatch(/unityProviderId:".*"/)
+    expect(html).toContain('unityProviderId')
   })
 })

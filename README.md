@@ -55,14 +55,9 @@ const callUnityFunction = () => {
 }
 const nuxtApp = useNuxtApp()
 
-nuxtApp.$nuxtUnityEvent.on('nuxt-unity:ready', (providerId, unityInstance) => {
+nuxtApp.$nuxtUnityEvent('nuxt-unity:ready').on(({ providerId, unityInstance }) => {
   // eslint-disable-next-line no-console
   console.log(providerId, unityInstance)
-})
-
-nuxtApp.$nuxtUnityEvent.on('hello', (message: string) => {
-  // eslint-disable-next-line no-console
-  console.log(message)
 })
 </script>
 
@@ -119,7 +114,7 @@ public class HelloController : MonoBehaviour
 // Sample.jslib
 mergeInto(LibraryManager.library, {
   JSLibFunction: function () {
-    $nuxtUnityEvent.emit('hello', 'Hello from unity jslib')
+    $nuxtUnityEvent('hello').emit({ message: 'Hello from unity jslib' })
   },
 })
 ```
@@ -234,11 +229,11 @@ You can use `$nuxtUnityEvent` plugin in your components or unity `.jslib` script
 
 ```typescript
 const { $nuxtUnityEvent } = useNuxtApp()
-$nuxtUnityEvent.on('message', () => console.log('message event fired'))
-$nuxtUnityEvent.emit('message')
+$nuxtUnityEvent('eventName').on(({ message }) => console.log(message))
+$nuxtUnityEvent('eventName').emit({ message: 'message' } })
 ```
 
-- `$nuxtUnityEvent` - EventEmitter object
+- `$nuxtUnityEvent` - eventmit object
   - `nuxt-unity:ready` - Hook called when unity instance created
   - `nuxt-unity:quit` - Hook called when unity instance quitted
 

@@ -1,4 +1,3 @@
-import EventEmitter from 'eventemitter3'
 import { useScriptTag, useResizeObserver } from '@vueuse/core'
 import { defu } from 'defu'
 import {
@@ -24,10 +23,11 @@ export interface UnityInstance extends Record<string, any> {
 }
 
 declare global {
-  interface Window {
-    createUnityInstance(canvas: Element, config: { [key: string]: any }, onProgress?: Function): Promise<UnityInstance>
-    $nuxtUnityEvent: EventEmitter
-  }
+  const createUnityInstance: (
+    canvas: Element,
+    config: { [key: string]: any },
+    onProgress?: Function
+  ) => Promise<UnityInstance>
 }
 
 const getKey = () => Number(Math.random().toString().slice(3)).toString(36)
@@ -90,7 +90,7 @@ const [useProvideNuxtUnity, useNuxtUnity] = createInjectionState(
       }
       await unity.value.Quit().then(() => {
         quitted.value = true
-        $nuxtUnityEvent.emit('nuxt-unity:quit', providerId.value, unity.value)
+        $nuxtUnityEvent('nuxt-unity:quit').emit({ providerId: providerId.value, unityInstance: unity.value! })
       })
     }
 
@@ -178,11 +178,11 @@ const [useProvideNuxtUnity, useNuxtUnity] = createInjectionState(
           context.emit('loading')
 
           const canvas = document.querySelector(`#unity-canvas-${providerId.value}`)
-          window
+          globalThis
             .createUnityInstance(canvas!, config, props.onProgress)
             .then((unityInstance) => {
               done(unityInstance)
-              $nuxtUnityEvent.emit('nuxt-unity:ready', providerId.value, unityInstance)
+              $nuxtUnityEvent('nuxt-unity:ready').emit({ providerId: providerId.value, unityInstance })
               context.emit('loaded')
             })
             .catch((message) => {

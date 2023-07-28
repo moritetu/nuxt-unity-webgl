@@ -11,11 +11,11 @@ const sayHello = () => {
   SendMessage('GameObject', 'hello', { message: 'Hello from web' })
 }
 const nuxtApp = useNuxtApp()
-nuxtApp.$nuxtUnityEvent.on('nuxt-unity:ready', (providerId, unityInstance) => {
+nuxtApp.$nuxtUnityEvent('nuxt-unity:ready').on(({ providerId, unityInstance }) => {
   // eslint-disable-next-line no-console
   console.log(providerId, unityInstance)
 })
-nuxtApp.$nuxtUnityEvent.on('hello', (message: string) => {
+nuxtApp.$nuxtUnityEvent('hello').on(({ message }) => {
   messageFromJslib.value = '...'
   // eslint-disable-next-line no-console
   console.log(message)
