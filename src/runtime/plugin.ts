@@ -1,14 +1,8 @@
 import { type Eventmitter, eventmit } from 'eventmit'
-import { EventmitterValueType } from './types'
+import type { EventmitterValueType, EventmitFactory } from './types'
 import { defineNuxtPlugin } from '#imports'
 
-type EventmitFactory = (key: string, forceNew?: boolean) => Eventmitter<EventmitterValueType>
-
-declare global {
-  const $nuxtUnityEvent: EventmitFactory
-}
-
-export declare module '#app' {
+declare module '#app' {
   interface NuxtApp {
     $nuxtUnityEvent: EventmitFactory
     $nuxtUnityRefresh: () => void
@@ -36,7 +30,7 @@ export default defineNuxtPlugin(() => {
     if (forceNew || !emitters.has(key)) {
       emitters.set(key, eventmit<EventmitterValueType>())
     }
-    return emitters.get(key)
+    return emitters.get(key)!
   }
 
   const refresh = () => emitters.clear()

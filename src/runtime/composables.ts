@@ -13,22 +13,8 @@ import {
   getCurrentInstance,
   shallowRef,
 } from 'vue-demi'
+import type { UnityInstance } from './types'
 import { useState, useNuxtApp } from '#app'
-
-// https://docs.unity3d.com/ja/2021.3/Manual/webgl-templates.html
-export interface UnityInstance extends Record<string, any> {
-  SetFullscreen: (fullScreen: 0 | 1) => void
-  SendMessage: (gameObject: string, method: string, param?: any) => void
-  Quit: () => Promise<void>
-}
-
-declare global {
-  const createUnityInstance: (
-    canvas: Element,
-    config: { [key: string]: any },
-    onProgress?: Function
-  ) => Promise<UnityInstance>
-}
 
 const getKey = () => Number(Math.random().toString().slice(3)).toString(36)
 
